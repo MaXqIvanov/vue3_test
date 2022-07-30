@@ -1,9 +1,10 @@
 <template>
     <div class="prood">
-      <div class="prood_wrapper">
-        <div class="cart"><div class="cart_wrapper"></div></div>
-        <div class="cart"><div class="cart_wrapper"></div></div>
-        <div class="cart"><div class="cart_wrapper"></div></div>
+      <div v-if="proods_all.length !== 0" class="prood_wrapper">
+        <div v-for="prood in proods_all" :key="prood.id" class="cart">
+            <div class="cart_wrapper">
+            </div>
+        </div>
       </div>
     </div>
 </template>
@@ -23,6 +24,7 @@ export default defineComponent({
     }),
   },
   computed: mapState({
+    proods_all: (state:any) => state.proods.proods_all,
   }),
 });
 </script>

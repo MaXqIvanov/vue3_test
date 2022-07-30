@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import Form from '@/components/Home/Form.vue';
 import Prood from '../components/Home/Prood.vue';
 
@@ -15,6 +16,18 @@ export default defineComponent({
   components: {
     Form,
     Prood,
+  },
+  methods: {
+    ...mapMutations({
+    }),
+    ...mapActions({
+      getProods: 'proods/getProods',
+    }),
+  },
+  computed: mapState({
+  }),
+  mounted() {
+    this.getProods();
   },
 });
 </script>

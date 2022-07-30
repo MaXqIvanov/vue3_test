@@ -69,6 +69,15 @@ export default defineComponent({
     z-index: 999;
     border-radius: 4px;
     overflow: hidden;
+    animation: appearence alternate linear .33s;
+    @keyframes appearence {
+        0%{
+            opacity: 0%;
+        }
+        100%{
+            opacity: 100%;
+        }
+    }
 }
 .option{
     background: #FFFEFB;
