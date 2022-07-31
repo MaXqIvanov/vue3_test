@@ -6,7 +6,7 @@
                 <div class="label_required">
                 Наименование товара <span></span></div>
                 <input id="name_prood" type="text" v-model="name"
-                placeholder="Введите наименование товара"
+                placeholder="Введите наименование товара" autocomplete="off"
                 :class="v$.$errors[0]?.$property === 'name' && 'input_danger'"/>
                 <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
                 && v$.$errors[0]?.$property === 'name'">Поле является обязательным</div>
@@ -27,6 +27,7 @@
                 <div class="label_required">Цена товара <span></span></div>
                 <input id="price_prood" type="text" maxlength="11"
                 placeholder="Введите цену" v-model="price"
+                autocomplete="off"
                 v-imask="priceMask" @accept="onAccept" @complete="onComplete"
                 :class="v$.$errors[0]?.$property === 'price' && 'input_danger'"/>
                 <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
@@ -173,7 +174,8 @@ export default defineComponent({
     line-height: 15px;
     color: #3F3F3F;
     resize: none;
-    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.15s;
+    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s;
+    cursor: default;
     &:focus{
         outline: 2px solid rgb(1, 247, 247);
     }
@@ -184,6 +186,9 @@ export default defineComponent({
         font-size: 12px;
         line-height: 15px;
         color: #B4B4B4;
+    }
+    &:hover{
+        outline: 2px solid rgb(1, 247, 247);
     }
 }
 label{
@@ -238,7 +243,8 @@ input{
     font-size: 12px;
     line-height: 15px;
     color: #3F3F3F;
-    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.15s;
+    transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.1s;
+    cursor: default;
     &:focus{
         outline: 2px solid rgb(1, 247, 247);
     }
@@ -249,6 +255,9 @@ input{
         font-size: 12px;
         line-height: 15px;
         color: #B4B4B4;
+    }
+    &:hover{
+        outline: 2px solid rgb(1, 247, 247);
     }
 }
 .form_wrapper{

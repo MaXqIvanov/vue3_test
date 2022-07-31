@@ -1,22 +1,28 @@
 <template>
     <div class="prood">
       <div v-if="proods_all.length !== 0" class="prood_wrapper">
-        <div v-for="prood in proods_all" :key="prood.id" class="cart">
-            <div class="cart_wrapper">
-              <div :style="{backgroundImage: `url(${prood?.img_link?.includes('http') ?
-              prood.img_link : 'https://media.istockphoto.com/vectors/oops-404-error-page-not-found-vector-id904056198?k=6&m=904056198&s=612x612&w=0&h=vm2DYzEvu--hQgRGvsKMacB3yNfqLXwlMAnrxjBzbIA='})`}"
-              class="img"></div>
-              <div class="block_info">
-                <div class="prood_name">{{ prood.name }}</div>
-                <div class="prood_description">{{ prood.description ? prood.description :
-                'описание отсутствует' }}</div>
-                <div class="prood_price">{{ prood.price }} руб.
+        <transition-group class="prood_wrapper" name="list" tag="p">
+          <div v-for="prood in proods_all" :key="prood.id" class="cart">
+              <div class="cart_wrapper">
+                <div :style="{backgroundImage: `url(${prood?.img_link?.includes('http') ?
+                prood.img_link : 'https://media.istockphoto.com/vectors/oops-404-error-page-not-found-vector-id904056198?k=6&m=904056198&s=612x612&w=0&h=vm2DYzEvu--hQgRGvsKMacB3yNfqLXwlMAnrxjBzbIA='})`}"
+                class="img"></div>
+                <div class="block_info">
+                  <div class="prood_name">{{ prood.name }}</div>
+                  <div class="prood_description">{{ prood.description ? prood.description :
+                  'описание отсутствует' }}</div>
+                  <div class="prood_price">{{ prood.price }} руб.
+                  </div>
                 </div>
+                <div @click="deleteProod(prood.id)" @keypress="deleteProod(prood)"
+                class="delete_btn" title="Удалить товар"></div>
               </div>
-              <div @click="deleteProod(prood.id)" @keypress="deleteProod(prood)"
-              class="delete_btn"></div>
-            </div>
-        </div>
+          </div>
+        </transition-group>
+      </div>
+      <div class="success" v-if="success">
+        <span>Успешное добавление </span>
+        <div class="btn_success"></div>
       </div>
     </div>
 </template>
@@ -38,10 +44,40 @@ export default defineComponent({
   },
   computed: mapState({
     proods_all: (state:any) => state.proods.proods_all,
+    success: (state:any) => state.proods.success,
   }),
 });
 </script>
 <style lang="scss" scoped>
+.success{
+  position: absolute;
+  border-radius: 10px;
+  width: 200px;
+  height: 50px;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: 1s alternate linear success;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn_success{
+  background-image: url('../../assets/home/add_prood.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 20px;
+  width: 20px;
+  margin-left: 10px;
+}
+@keyframes success{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
 .prood_price{
   position: absolute;
   bottom: 16px;
@@ -99,6 +135,15 @@ export default defineComponent({
     height: 423px;
     display: flex;
     justify-content: center;
+    animation: addCart linear alternate 1s;
+}
+@keyframes addCart {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
 }
 .cart_wrapper{
     background: #FFFEFB;
@@ -155,6 +200,10 @@ export default defineComponent({
     grid-template-columns: auto auto auto;
     column-gap: 16px;
     row-gap: 16px;
+    @media(min-width: 1800px) {
+      grid-template-columns: 48% 48% 48% 48%;
+      column-gap: 5.33%;
+    }
     @media(max-width: 1380px){
         grid-template-columns: auto auto;
     }
@@ -175,4 +224,19 @@ export default defineComponent({
     border-radius: 20px; /* закругления плашки */
     border: 3px solid #84d1fd; /* padding вокруг плашки */
   }
+</style>
+<style>
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>

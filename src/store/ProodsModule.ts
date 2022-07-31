@@ -1,6 +1,8 @@
 export default {
   state: {
     proods_all: [] as any[],
+    sortUp: true as boolean,
+    success: false as boolean,
   },
   mutations: {
     sortingProod(state:any, payload:any) {
@@ -12,11 +14,17 @@ export default {
         state.proods_all.sort((a:any, b:any) => parseFloat(a.price.replace(/\s/g, '')) - parseFloat(b.price.replace(/\s/g, '')));
       }
       if (payload === 'По наименованию') {
-        state.proods_all.sort((a:any, b:any) => {
-          if (a.name < b.name) { return -1; }
-          if (b.name > a.name) { return 1; }
-          return 0;
-        });
+        if (state.sortUp) {
+          state.sortUp = !state.sortUp;
+          state.proods_all.sort((a:any, b:any) => {
+            if (a.name < b.name) { return -1; }
+            if (b.name > a.name) { return 1; }
+            return 0;
+          });
+        } else {
+          state.proods_all.reverse();
+          state.sortUp = !state.sortUp;
+        }
       }
     },
   },
@@ -24,10 +32,12 @@ export default {
     getProods({
       commit, state,
     }:any, payload:any) {
+      console.log('this is start');
       let keys = Object.keys(localStorage);
       keys = keys.filter((elem:any) => elem.includes('P_'));
       state.proods_all = keys.map((elem:any) => JSON.parse(String(localStorage.getItem(elem))));
       console.log(state.proods_all);
+      console.log('this is end');
     },
     addProods({
       commit, state,
@@ -51,6 +61,10 @@ export default {
       const prood = { ...payload, id };
       localStorage.setItem(key, JSON.stringify(prood));
       state.proods_all = [...state.proods_all, prood];
+      state.success = !state.success;
+      setTimeout(() => {
+        state.success = !state.success;
+      }, 2500);
     },
     deleteProod({
       commit, state,
