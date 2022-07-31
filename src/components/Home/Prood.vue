@@ -10,8 +10,7 @@
                 <div class="prood_name">{{ prood.name }}</div>
                 <div class="prood_description">{{ prood.description ? prood.description :
                 'описание отсутствует' }}</div>
-                <div class="prood_price">{{ prood.price.toLocaleString(undefined,
-                  {minimumFractionDigits: 0, maximumFractionDigits: 2}).replaceAll(',', ' ') }} руб.
+                <div class="prood_price">{{ prood.price }} руб.
                 </div>
               </div>
               <div @click="deleteProod(prood.id)" @keypress="deleteProod(prood)"

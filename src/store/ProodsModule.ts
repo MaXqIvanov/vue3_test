@@ -3,6 +3,22 @@ export default {
     proods_all: [] as any[],
   },
   mutations: {
+    sortingProod(state:any, payload:any) {
+      console.log(payload);
+      if (payload === 'По цене max') {
+        state.proods_all.sort((a:any, b:any) => parseFloat(b.price.replace(/\s/g, '')) - parseFloat(a.price.replace(/\s/g, '')));
+      }
+      if (payload === 'По цене min') {
+        state.proods_all.sort((a:any, b:any) => parseFloat(a.price.replace(/\s/g, '')) - parseFloat(b.price.replace(/\s/g, '')));
+      }
+      if (payload === 'По наименованию') {
+        state.proods_all.sort((a:any, b:any) => {
+          if (a.name < b.name) { return -1; }
+          if (b.name > a.name) { return 1; }
+          return 0;
+        });
+      }
+    },
   },
   actions: {
     getProods({
@@ -22,21 +38,15 @@ export default {
       let id: number;
       if (state.proods_all.length > 0) {
         const currentId = state.proods_all.reduce((p:any, v:any) => {
-          console.log(p.id);
-          console.log(v.id);
           if (p.id > v.id) {
             return p;
           }
           return v;
         });
-        console.log('this is currentId');
-        console.log(currentId);
         id = Number(currentId.id + 1);
-        console.log(id);
       } else {
         id = 1;
       }
-      console.log(id);
       const key = `P_${id}`;
       const prood = { ...payload, id };
       localStorage.setItem(key, JSON.stringify(prood));

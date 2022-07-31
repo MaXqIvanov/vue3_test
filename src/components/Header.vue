@@ -8,8 +8,8 @@
           <div class="select_arrow"></div>
         </label>
         <div class="options" v-if="option_visible">
-          <div @click="changeActiveSelect(elem.title)"
-            @keypress="changeActiveSelect(elem.title)"
+          <div @click="changeActiveSelect(elem.title); sortingProod(elem.title)"
+            @keypress="changeActiveSelect(elem.title); sortingProod(elem.title)"
             class="option" v-for="elem in sort" :key="elem.id">
             <span >{{ elem.title }}</span>
           </div>
@@ -46,6 +46,7 @@ export default defineComponent({
   },
   methods: {
     ...mapMutations({
+      sortingProod: 'proods/sortingProod',
     }),
     ...mapActions({
     }),

@@ -100,13 +100,13 @@ export default defineComponent({
     onAccept(e:any) {
       const maskRef = e.detail;
       console.log(maskRef);
-      if (maskRef.length < 8) {
-        this.price = maskRef.value;
-      }
+      this.price = maskRef.value;
+      console.log(this.price);
     },
     onComplete(e:any) {
       const maskRef = e.detail;
       this.userPrice = maskRef.unmaskedValue;
+      console.log(this.userPrice);
     },
   },
   computed: mapState({
