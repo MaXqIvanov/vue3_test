@@ -3,26 +3,41 @@
       <div class="form_wrapper">
         <form>
             <label for="name_prood">
-                <div class="label_required">Наименование товара <span></span></div>
-                <input id="name_prood" type="text"
-                placeholder="Введите наименование товара"/>
+                <div class="label_required">
+                Наименование товара <span></span></div>
+                <input id="name_prood" type="text" v-model="name"
+                placeholder="Введите наименование товара"
+                :class="v$.$errors[0]?.$property === 'name' && 'input_danger'"/>
+                <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
+                && v$.$errors[0]?.$property === 'name'">Поле является обязательным</div>
             </label>
             <label for="description_prood">
                 <div class="label">Описание товара</div>
-                <textarea id="description_prood" type="text" multiple
+                <textarea id="description_prood" type="text" multiple v-model="description"
                 placeholder="Введите описание товара"/>
             </label>
             <label for="img_prood">
                 <div class="label_required">Ссылка на изображение товара <span></span></div>
-                <input id="img_prood" type="text" placeholder="Введите ссылку"/>
+                <input id="img_prood" type="text" placeholder="Введите ссылку" v-model="img_link"
+                :class="v$.$errors[0]?.$property === 'img_link' && 'input_danger'"/>
+                <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
+                && v$.$errors[0]?.$property === 'img_link'">Поле является обязательным</div>
             </label>
             <label for="price_prood">
                 <div class="label_required">Цена товара <span></span></div>
-                <input id="price_prood" type="text" placeholder="Введите цену"/>
+                <input id="price_prood" type="number" min="1"
+                placeholder="Введите цену" v-model="price"
+                :class="v$.$errors[0]?.$property === 'price' && 'input_danger'"/>
+                <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
+                && v$.$errors[0]?.$property === 'price'">Поле является обязательным</div>
+                <div class="errors_message" v-else-if="v$?.$errors[0]?.$validator === 'numeric'
+                && v$.$errors[0]?.$property === 'price'">Поле не может быть отрицательным</div>
             </label>
             <label for="add_btn">
-                <input id="add_btn" class="add_btn"
-                type="button" value="Добавить товар"/>
+                <input @click="validateInputs"
+                id="add_btn" class="add_btn"
+                type="button" value="Добавить товар"
+                :class="!v$.$error && price && img_link && name && 'active_btn'"/>
             </label>
         </form>
       </div>
@@ -33,7 +48,7 @@
 import { defineComponent } from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import useValidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { required, numeric } from '@vuelidate/validators';
 
 export default defineComponent({
   name: 'FormComponent',
@@ -42,23 +57,62 @@ export default defineComponent({
   data() {
     return {
       v$: useValidate(),
-      name: '',
-      description: '',
-      img_link: '',
-      price: '',
+      name: '' as string,
+      description: '' as string,
+      img_link: '' as string,
+      price: '' as string,
+    };
+  },
+  validations() {
+    return {
+      name: { required },
+      img_link: { required },
+      price: { required, numeric },
     };
   },
   methods: {
     ...mapMutations({
     }),
     ...mapActions({
+      addProods: 'proods/addProods',
     }),
+    validateInputs() {
+      this.v$.$validate();
+      if (this.v$.$error) {
+        console.log(this.v$.$errors);
+      } else {
+        this.addProods({
+          name: this.name,
+          description: this.description,
+          img_link: this.img_link,
+          price: this.price,
+        });
+      }
+    },
   },
   computed: mapState({
   }),
 });
 </script>
 <style lang="scss" scoped>
+.input_danger{
+    background: #FFFEFB;
+    border: 1px solid #FF8484 !important;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 284px;
+    height: 36px;
+}
+.errors_message{
+    font-family: 'Source Sans Pro';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 8px;
+    line-height: 10px;
+    letter-spacing: -0.02em;
+    color: #FF8484;
+}
 .active_btn{
     background: #7BAE73 !important;
     color: #fff !important;
@@ -112,6 +166,9 @@ export default defineComponent({
         line-height: 15px;
         color: #B4B4B4;
     }
+}
+label{
+    position: relative;
 }
 .label{
     font-family: 'Source Sans Pro';
@@ -189,4 +246,23 @@ input{
     justify-content: center;
     align-items: center;
   }
+</style>
+<style>
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

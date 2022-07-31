@@ -5,20 +5,41 @@ export default {
   mutations: {
   },
   actions: {
-    getProods(state:any) {
+    getProods({
+      commit, state,
+    }:any, payload:any) {
       let keys = Object.keys(localStorage);
       keys = keys.filter((elem:any) => elem.includes('P_'));
-      state.proods_all = keys.map((elem:any) => localStorage.getItem(elem));
+      state.proods_all = keys.map((elem:any) => JSON.parse(String(localStorage.getItem(elem))));
       console.log(state.proods_all);
     },
-    addProods(state:any, payload:any) {
+    addProods({
+      commit, state,
+    }:any, payload:any) {
       console.log(payload);
       let keys = Object.keys(localStorage);
       keys = keys.filter((elem:any) => elem.includes('P_'));
-      const id = keys.length;
-      const key = `P_${payload.name}${id}`;
+      let id: number;
+      if (state.proods_all.length > 0) {
+        const currentId = state.proods_all.reduce((p:any, v:any) => {
+          console.log(p.id);
+          console.log(v.id);
+          if (p.id > v.id) {
+            return p;
+          }
+          return v;
+        });
+        console.log('this is currentId');
+        console.log(currentId);
+        id = Number(currentId.id + 1);
+        console.log(id);
+      } else {
+        id = 1;
+      }
+      console.log(id);
+      const key = `P_${payload.name}_${id}`;
       const prood = { ...payload, id };
-      localStorage.setItem(key, prood);
+      localStorage.setItem(key, JSON.stringify(prood));
       state.proods_all = [...state.proods_all, prood];
     },
   },
