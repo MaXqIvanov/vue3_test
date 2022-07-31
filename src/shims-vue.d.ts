@@ -6,3 +6,4 @@ declare module '*.vue' {
 }
 declare module '@vuelidate/core'
 declare module '@vuelidate/validators'
+declare module 'vue-imask'

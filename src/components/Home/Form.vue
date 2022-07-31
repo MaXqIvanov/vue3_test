@@ -25,13 +25,12 @@
             </label>
             <label for="price_prood">
                 <div class="label_required">Цена товара <span></span></div>
-                <input id="price_prood" type="number" min="1"
+                <input id="price_prood" type="text" maxlength="11"
                 placeholder="Введите цену" v-model="price"
+                v-imask="priceMask" @accept="onAccept" @complete="onComplete"
                 :class="v$.$errors[0]?.$property === 'price' && 'input_danger'"/>
                 <div class="errors_message" v-if="v$?.$errors[0]?.$validator === 'required'
                 && v$.$errors[0]?.$property === 'price'">Поле является обязательным</div>
-                <div class="errors_message" v-else-if="v$?.$errors[0]?.$validator === 'numeric'
-                && v$.$errors[0]?.$property === 'price'">Поле не может быть отрицательным</div>
             </label>
             <label for="add_btn">
                 <input @click="validateInputs"
@@ -49,10 +48,14 @@ import { defineComponent } from 'vue';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import useValidate from '@vuelidate/core';
 import { required, numeric } from '@vuelidate/validators';
+import { IMaskDirective } from 'vue-imask';
 
 export default defineComponent({
   name: 'FormComponent',
   components: {
+  },
+  directives: {
+    imask: IMaskDirective,
   },
   data() {
     return {
@@ -61,13 +64,18 @@ export default defineComponent({
       description: '' as string,
       img_link: '' as string,
       price: '' as string,
+      priceMask: {
+        mask: '000 000 000',
+        lazy: true,
+      },
+      userPrice: '' as string,
     };
   },
   validations() {
     return {
       name: { required },
       img_link: { required },
-      price: { required, numeric },
+      price: { required },
     };
   },
   methods: {
@@ -88,6 +96,17 @@ export default defineComponent({
           price: this.price,
         });
       }
+    },
+    onAccept(e:any) {
+      const maskRef = e.detail;
+      console.log(maskRef);
+      if (maskRef.length < 8) {
+        this.price = maskRef.value;
+      }
+    },
+    onComplete(e:any) {
+      const maskRef = e.detail;
+      this.userPrice = maskRef.unmaskedValue;
     },
   },
   computed: mapState({

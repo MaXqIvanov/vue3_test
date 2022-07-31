@@ -37,10 +37,17 @@ export default {
         id = 1;
       }
       console.log(id);
-      const key = `P_${payload.name}_${id}`;
+      const key = `P_${id}`;
       const prood = { ...payload, id };
       localStorage.setItem(key, JSON.stringify(prood));
       state.proods_all = [...state.proods_all, prood];
+    },
+    deleteProod({
+      commit, state,
+    }:any, payload:any) {
+      console.log(payload);
+      localStorage.removeItem(`P_${payload}`);
+      state.proods_all = state.proods_all.filter((elem:any) => elem.id !== payload);
     },
   },
   modules: {

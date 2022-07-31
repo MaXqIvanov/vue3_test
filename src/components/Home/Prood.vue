@@ -10,8 +10,12 @@
                 <div class="prood_name">{{ prood.name }}</div>
                 <div class="prood_description">{{ prood.description ? prood.description :
                 'описание отсутствует' }}</div>
-                <div class="prood_price">{{ prood.price }} руб.</div>
+                <div class="prood_price">{{ prood.price.toLocaleString(undefined,
+                  {minimumFractionDigits: 0, maximumFractionDigits: 2}).replaceAll(',', ' ') }} руб.
+                </div>
               </div>
+              <div @click="deleteProod(prood.id)" @keypress="deleteProod(prood)"
+              class="delete_btn"></div>
             </div>
         </div>
       </div>
@@ -30,6 +34,7 @@ export default defineComponent({
     ...mapMutations({
     }),
     ...mapActions({
+      deleteProod: 'proods/deleteProod',
     }),
   },
   computed: mapState({
@@ -105,6 +110,36 @@ export default defineComponent({
     position: relative;
     display: grid;
     grid-auto-rows: 200px auto;
+    .delete_btn{
+      display: none;
+      animation: delete_btn linear alternate 0.66s;
+    }
+    &:hover{
+      .delete_btn{
+      display: block;
+      width: 32px;
+      height: 32px;
+      background: #FF8484;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-image: url('../../assets/home/delete_btn.svg');
+      background-repeat: no-repeat;
+      background-size: 16px 13px;
+      background-position: 50% 50%;
+      cursor: pointer;
+}
+    }
+}
+@keyframes delete_btn {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 100%;
+  }
 }
 .prood{
     width: 100%;
@@ -121,7 +156,7 @@ export default defineComponent({
     grid-template-columns: auto auto auto;
     column-gap: 16px;
     row-gap: 16px;
-    @media(max-width: 1300px){
+    @media(max-width: 1380px){
         grid-template-columns: auto auto;
     }
     @media(max-width: 1080px){

@@ -147,6 +147,10 @@ export default defineComponent({
     justify-content: space-between;
     align-items: center;
     position: relative;
+    @media(max-width: 450px){
+      margin-left: 16px;
+      margin-right: 16px;
+    }
 }
 .title{
     font-family: 'Source Sans Pro';
@@ -154,11 +158,12 @@ export default defineComponent({
     font-weight: 600;
     font-size: 28px;
     line-height: 35px;
-
     color: #3F3F3F;
-
     @media(max-width: 630px){
         font-size: x-large;
+    }
+    @media(max-width: 450px){
+        font-size: large;
     }
 }
 </style>
